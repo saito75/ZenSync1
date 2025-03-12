@@ -1,0 +1,21 @@
+name: Build iOS App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build the App
+        run: |
+          cd ios
+          xcodebuild -workspace ZenSync.xcworkspace -scheme ZenSync -sdk iphoneos
