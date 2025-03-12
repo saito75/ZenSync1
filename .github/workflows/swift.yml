@@ -1,26 +1,4 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
-name: Swift
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-jobs:
-  build:
-
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
-name: Build Android APK
+name: Build iOS App
 
 on:
   push:
@@ -29,25 +7,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '11'
+      - name: Set up Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
 
-      - name: Build APK
+      - name: Build the App
         run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleRelease
+          cd ios
+          xcodebuild -workspace ZenSync.xcworkspace -scheme ZenSync -sdk iphoneos
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v2
-        with:
-          name: ZenSync-APK
-          path: android/app/build/outputs/apk/release/app-release.apk
